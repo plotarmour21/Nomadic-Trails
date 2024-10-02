@@ -1,29 +1,47 @@
 import React from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Hero from "./components/Hero";
+import PopularDestinations from "./components/PopularDestinations";
+import SeasonalTravelGuide from "./components/SeasonalTravelGuide";
+import SafetyInformation from "./components/SafetyInformation";
+import ThingsToAvoid from "./components/ThingsToAvoid";
+import Footer from "./components/Footer";
 
-import Navbar from "./components/Navbar"; // Navbar import
-import Home from "./components/Home"; // Home component import
-import Destinations from "./components/Destinations"; // Destinations component import
-import TravelTips from "./components/TravelTips"; // TravelTips component import
-import Blog from "./components/Blog"; // Blog component import
-import About from "./components/About"; // About component import
-import Contact from "./components/Contact"; // Contact component import
+function App() {
+  const controls = useAnimation();
+  const [ref, inView] = useInView();
 
-const App = () => {
+  React.useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    }
+  }, [controls, inView]);
+
   return (
-    <>
-    <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/destinations" element={<Destinations />} />
-        <Route path="/travel-tips" element={<TravelTips />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-    </>
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-100 text-gray-900 font-sans">
+      <Hero />
+      <motion.div
+        ref={ref}
+        animate={controls}
+        initial="hidden"
+        variants={{
+          visible: { opacity: 1, y: 0 },
+          hidden: { opacity: 0, y: 50 },
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <PopularDestinations />
+      </motion.div>
+      <SeasonalTravelGuide />
+      <SafetyInformation />
+
+      <ThingsToAvoid />
+
+      <Footer />
+    </div>
   );
-};
+}
 
 export default App;
